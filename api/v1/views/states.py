@@ -18,8 +18,8 @@ def get_states():
 def get_state(state_id):
     """Get state information for specified state"""
     state = storage.get(State, state_id)
-    if state is None:
-        abort(404)
+    if not state:
+        return jsonify({"error": "Not found"}), 404
     return jsonify(state.to_dict())
 
 
@@ -27,7 +27,7 @@ def get_state(state_id):
 def delete_state(state_id):
     """Deletes a state based on its state_id"""
     state = storage.get(State, state_id)
-    if state is None:
+    if not state:
         return jsonify({"error": "Not found"}), 404
     state.delete()
     storage.save()
@@ -50,7 +50,7 @@ def post_state():
 def put_state(state_id):
     """Update a state"""
     state = storage.get(State, state_id)
-    if state is None:
+    if not state:
         return jsonify({"error": "Not found"}), 404
     if not request.json:
         return make_response(jsonify({'error': 'Not a JSON'}), 400)
